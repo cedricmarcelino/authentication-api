@@ -4,8 +4,8 @@ import {join} from 'path';
 export const users = {
     all: sql('users/all.sql'),
     add: sql('users/add.sql'),
-    isUsernameTaken: sql('users/isUsernameTaken.sql'),
-    isEmailTaken: sql('users/isEmailTaken.sql'),
+    getUserByUsername: sql('users/getUserByUsername.sql'),
+    getUserByEmail: sql('users/getUserByEmail.sql'),
 };
 
 ///////////////////////////////////////////////

@@ -1,5 +1,5 @@
 import {IDatabase, IMain} from 'pg-promise';
-import {IUser} from '../models';
+import {IUser, IUserResponse} from '../models';
 import {users as sql} from '../sql';
 
 export class UsersRepository {
@@ -23,15 +23,15 @@ export class UsersRepository {
         return this.db.any(sql.all);
     }
 
-    add(username: string, password: string, email: string, first_name: string, last_name: string): Promise<IUser[]> {
+    add(username: string, password: string, email: string, first_name: string, last_name: string): Promise<IUserResponse> {
         return this.db.one(sql.add, [username, password, email, first_name, last_name]);
     }
 
-    isUsernameTaken(username: string): Promise<IUser[]> {
-        return this.db.any(sql.isUsernameTaken, username);
+    getUserByUsername(username: string): Promise<IUser[]> {
+        return this.db.any(sql.getUserByUsername, username);
     }
 
-    isEmailTaken(email: string): Promise<IUser[]> {
-        return this.db.any(sql.isEmailTaken, email);
+    getUserByEmail(email: string): Promise<IUser[]> {
+        return this.db.any(sql.getUserByEmail, email);
     }
 }
