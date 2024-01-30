@@ -10,3 +10,8 @@ export const userSchema = Joi.object({
     first_name: Joi.string().max(50).required(),
     last_name: Joi.string().max(50).required()
 })
+
+export const userLoginSchema = Joi.object({
+    username: Joi.string().alphanum().required(),
+    password: Joi.string().required(),
+})
