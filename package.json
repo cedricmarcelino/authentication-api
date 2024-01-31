@@ -4,8 +4,9 @@
   "description": "",
   "main": "dist/app.js",
   "scripts": {
-    "build": "npx tsc",
-    "start": "node dist/app.js",
+    "build-sql": "mkdir ./dist/db/sql/users && cp ./db/sql/users/*.sql ./dist/db/sql/users",
+    "build": "npx tsc && npm run build-sql",
+    "start": "node dist/app.js | pino-pretty",
     "dev": "nodemon app.ts | pino-pretty"
   },
   "author": "Cedric Jastine Marcelino",
