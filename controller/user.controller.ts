@@ -2,12 +2,21 @@ import { db } from '../db'
 import { Request, Response } from 'express'
 import { userSchema } from '../schema/users'
 import { IUser } from '../db/models'
-import jwt from 'jsonwebtoken'
+import jwt, { Jwt, JwtPayload } from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 
-const maxAge = 24 * 60 * 60
+interface CustomJWTPayload extends JwtPayload {
+    username: string;
+}
+interface CustomJwt extends Omit<Jwt, 'payload'>{
+    payload: CustomJWTPayload;
+}
+
+const maxAge = 60 * 60
+const sampleSecret = 'this is a sample secret'
+
 const createToken = (username: string) => {
-    return jwt.sign({ username }, 'this is a sample secret', {
+    return jwt.sign({ username }, sampleSecret, {
         expiresIn: maxAge
     })
 }
@@ -70,9 +79,37 @@ const users_add = async (req: Request, res: Response) => {
     }
 }
 
+const users_getByUsername = async (req: Request, res: Response) => {
+    try {
+        const token: string = req.cookies.jwt
+        if (token) {
+            const verify = jwt.verify(token, sampleSecret, { complete: true }) as CustomJwt
+            const getUser = await db.users.getUserByUsername(req.params.username)
+            if (getUser.length > 0) {
+                const loggedInUser = verify.payload.username
+                if(getUser[0].username === loggedInUser) {
+                    console.log('User logged in as requested user.')
+                    const { username, email, first_name, last_name } = getUser[0]
+                    return res.send({ username, email, first_name, last_name });
+                }
+                return res.status(403).send('Please log in as the requested user.')
+            }
+            return res.status(404).send('The user requested does not exist.')
+        } else {
+            return res.status(401).send('Unauthenticated.')
+        }
+    } catch (error: any) {
+        if (error.name === 'JsonWebTokenError') {
+            return res.status(400).send(error)
+        }
+        return res.status(500).send(error)
+    }
+}
+
 module.exports = {
   users_index,
   users_add,
   maxAge,
   createToken,
+  users_getByUsername,
 }

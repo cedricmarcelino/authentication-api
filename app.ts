@@ -2,13 +2,16 @@ import express, { Express, Request, Response } from 'express';
 
 const userRoutes = require('./routes/user.route');
 const authRoutes = require('./routes/auth.route');
+const cookieParser = require('cookie-parser');
+
 
 const app: Express = express()
 
 
 app.use(express.json()) // for parsing application/json
+app.use(cookieParser())
 
-app.get('/', (req: Request, res: Response) => {
+app.get('/', (_req: Request, res: Response) => {
   res.send('Express + TypeScript Server');
 });
 
