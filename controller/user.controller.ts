@@ -4,6 +4,7 @@ import { userSchema } from '../schema/users'
 import { IUser } from '../db/models'
 import jwt, { Jwt, JwtPayload } from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
+import { logger } from '../utils/loggerFactory'
 
 interface CustomJWTPayload extends JwtPayload {
     username: string;
@@ -29,51 +30,57 @@ const hashPassword = (password: string) => {
 
 const users_index = (_req: Request, res: Response) => {
     try {
-        console.log('Retrieving all users.')
+        logger.info('Retrieving all users.')
         db.users.all().then((data) => {
-            console.log('Retrieved users.', data)
+            logger.info('Retrieved all users.', data)
             return res.send(data)
         })
     } catch (error) {
-        console.log(error)
-        res.status(500).send(error)
+        logger.error(error)
+        return res.status(500).send(error)
     }
 }
 
 const users_add = async (req: Request, res: Response) => {
     try {
         const { body } = req;
-        console.log('Validating request body. \n', body)
+        logger.info('Validating request body.')
         const data: IUser = await userSchema.validateAsync(body)
-        console.log('Request body valid.  \n', body)
+        logger.info('Request body valid.')
         const { username, password, email, first_name, last_name } = data
-        console.log('Checking if username exists.')
+        logger.info('Checking if username exists.')
         const isUsernameTaken = await db.users.getUserByUsername(username)
         if (isUsernameTaken.length > 0) {
-            console.log('Username is already taken.')
+            logger.error('Username is already taken.')
             return res.status(409).send('Username is already taken.')
         }
-        console.log('Username is not taken.')
-        console.log('Checking if email is already in use.')
+        logger.info('Username is not taken.')
+        logger.info('Checking if email is already in use.')
         const isEmailTaken = await db.users.getUserByEmail(email)
         if (isEmailTaken.length > 0) {
-            console.log('Email is already linked to an account.')
+            logger.error('Email is already linked to an account.')
             return res.status(409).send('Email is already linked to an account.')
         }
-        console.log('Email is not taken.')
-        console.log('Encrypting password')
+        logger.info('Email is not taken.')
+        logger.info('Encrypting password.')
         const hashedPassword = hashPassword(password)
-        console.log('Password encrypted.')
+        logger.info('Password encrypted.')
         db.users.add(username, hashedPassword, email, first_name, last_name).then((data) => {
+            logger.info('User created.')
+            logger.info('Creating JWT for authentication.')
             const token = createToken(data.username)
             res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 })
-            res.send(data)
+            logger.info('JWT set and sent to client.')
+            logger.info(data)
+            return res.send(data)
         })
     } catch (error: any) {
         if(error.details) {
-            console.log('Request body invalid.', error.details)
+            logger.error('Request body invalid.')
+            logger.error(error.details)
             return res.status(400).send(error.details)
         } else {
+            logger.error(error)
             return res.status(500).send(error)
         }
     }
@@ -81,19 +88,31 @@ const users_add = async (req: Request, res: Response) => {
 
 const users_getByUsername = async (req: Request, res: Response) => {
     try {
+        logger.info('Checking for JWT.')
         const token: string = req.cookies.jwt
         if (token) {
+            logger.info('Token found.')
+            logger.info('Verifying authenticity of token.')
             const verify = jwt.verify(token, sampleSecret, { complete: true }) as CustomJwt
+            logger.info('Token verified.')
+            logger.info(`Getting requested user's data.`)
             const getUser = await db.users.getUserByUsername(req.params.username)
             if (getUser.length > 0) {
+                logger.info('User found.')
                 const loggedInUser = verify.payload.username
+                logger.info('Verifying if logged in user is requesting for its own data.')
                 if(getUser[0].username === loggedInUser) {
-                    console.log('User logged in as requested user.')
+                    logger.info('Verified that the user is requesting for its own data.')
                     const { username, email, first_name, last_name } = getUser[0]
-                    return res.send({ username, email, first_name, last_name });
+                    const data = { username, email, first_name, last_name }
+                    logger.info('Data sent to user.')
+                    logger.info(data)
+                    return res.send(data);
                 }
+                logger.error('Please log in as the requested user.')
                 return res.status(403).send('Please log in as the requested user.')
             }
+            logger.error('The user requested does not exist.')
             return res.status(404).send('The user requested does not exist.')
         } else {
             return res.status(401).send('Unauthenticated.')

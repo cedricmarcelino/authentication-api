@@ -6,7 +6,13 @@ const cookieParser = require('cookie-parser');
 const logger = require('pino')();
 const app: Express = express()
 
+// TO DO:
 // Fix error handling for bad json format
+// Add pagination for all users
+// Try to catch error of JWT verify
+// Add json format for responses, on error and on success
+// Double check responses, make sure to log it.
+// Configure Swagger UI
 
 app.use(express.json())
 app.use(cookieParser())
