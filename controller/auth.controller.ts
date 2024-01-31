@@ -3,18 +3,15 @@ import { userLoginSchema } from '../schema/users';
 import { db } from '../db';
 import { IUser } from '../db/models';
 import bcrypt from 'bcrypt'
+import { logger } from '../utils/loggerFactory'
 const userController = require('./user.controller')
-// DONE:
-// Already able to login by validating hashed password with the sent password.
-// TO DO:
-// Checking on which user is logged in
 
 const login_user = async (req: Request, res: Response) => {
     try {
         const { body } = req;
-        console.log('Validating request body. \n', body)
+        logger.info('Validating request body.')
         const data: IUser = await userLoginSchema.validateAsync(body)
-        console.log('Request body valid.  \n', body)
+        logger.info('Request body valid.')
         const { username, password } = data
         const user = await db.users.getUserByUsername(username)
         if (user.length > 0) {
@@ -22,18 +19,22 @@ const login_user = async (req: Request, res: Response) => {
             if(validatePassword) {
                 const token = userController.createToken(user[0].username);
                 res.cookie('jwt', token, { httpOnly: true, maxAge: userController.maxAge * 1000 })
+                logger.info('User authentication successful.')
                 return res.send('User authenticated!')
             }
+            logger.error('User authentication failed. Incorrect password.')
             return res.send('Password incorrect!')
         } else {
-            console.log('Username does not exist.')
+            logger.error('Username does not exist.')
             return res.status(409).send('Username does not exist.')
         }
     } catch (error: any) {
         if(error.details) {
-            console.log('Request body invalid.', error.details)
+            logger.error('Request body invalid.')
+            logger.error(error.details)
             return res.status(400).send(error.details)
         } else {
+            logger.error(error)
             return res.status(500).send(error)
         }
     }
