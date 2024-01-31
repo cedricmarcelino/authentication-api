@@ -5,7 +5,7 @@
   "main": "dist/app.js",
   "scripts": {
     "build-sql": "mkdir ./dist/db/sql/users && cp ./db/sql/users/*.sql ./dist/db/sql/users",
-    "build": "npx tsc && npm run build-sql",
+    "build": "rm -r -Force ./dist && npx tsc && npm run build-sql",
     "start": "node dist/app.js | pino-pretty",
     "dev": "nodemon app.ts | pino-pretty"
   },
@@ -14,6 +14,8 @@
   "dependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.5",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.6",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",
     "express": "^4.18.2",
@@ -22,6 +24,8 @@
     "pg-promise": "^11.5.4",
     "pino-http": "^9.0.0",
     "pino-pretty": "^10.3.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0",
     "types-joi": "^2.1.0"
   },
   "devDependencies": {
