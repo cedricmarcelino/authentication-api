@@ -22,7 +22,8 @@ const initOptions: IInitOptions<IExtensions> = {
 const pgp: IMain = pgPromise(initOptions);
 
 // Creating the database instance with extensions:
-const db: ExtendedProtocol = pgp(dbConfig);
+const dbHost = process.env.DB_HOST || 'localhost'
+const db: ExtendedProtocol = pgp(`postgres://postgres:admin@${dbHost}:5432/blog_api`);
 
 // Alternatively, you can get access to pgp via db.$config.pgp
 // See: https://vitaly-t.github.io/pg-promise/Database.html#$config
