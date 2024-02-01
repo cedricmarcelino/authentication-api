@@ -5,8 +5,14 @@ const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).
 
 export const userSchema = Joi.object({
     username: Joi.string().alphanum().min(3).max(15).required(),
-    password: Joi.string().pattern(passwordRegex).required(),
-    email: Joi.string().pattern(emailRegex).required(),
+    password: Joi.string().min(8).max(32).pattern(passwordRegex).required()
+    .messages({
+      'string.pattern.base': 'Password does not meet the minimum criteria.'
+    }),
+    email: Joi.string().pattern(emailRegex).required()
+    .messages({
+      'string.pattern.base': 'Email provided is not a valid email.'
+    }),
     first_name: Joi.string().max(50).required(),
     last_name: Joi.string().max(50).required()
 })
