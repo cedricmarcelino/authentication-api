@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS members(
+    id BIGSERIAL PRIMARY KEY NOT NULL,
+    username VARCHAR(15) NOT NULL,
+    password CHAR(60) NOT NULL,
+    email VARCHAR(254) NOT NULL,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL
+);

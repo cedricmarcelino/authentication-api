@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { userLoginSchema } from '../schema/users';
 import { db } from '../db';
-import { IUser, IUserResponse } from '../db/models';
+import { IUser } from '../db/models';
 import bcrypt from 'bcrypt'
 import { logger } from '../utils/loggerFactory'
 import { responseError, responseServerError, responseValidation } from '../utils/response';

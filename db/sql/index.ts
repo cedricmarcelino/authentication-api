@@ -8,6 +8,10 @@ export const users = {
     getUserByEmail: sql('users/getUserByEmail.sql'),
 };
 
+export const init = {
+    members: sql('init/members.sql'),
+};
+
 ///////////////////////////////////////////////
 // Helper for linking to external query files;
 function sql(file: string): QueryFile {

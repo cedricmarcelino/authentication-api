@@ -4,9 +4,11 @@
   "description": "",
   "main": "dist/app.js",
   "scripts": {
-    "build-sql": "mkdir ./dist/db/sql/users && cp ./db/sql/users/*.sql ./dist/db/sql/users",
-    "build": "rm -r -Force ./dist && npx tsc && npm run build-sql",
-    "start": "node dist/app.js | pino-pretty",
+    "build-sql": "npm run copy-users-sql && npm run copy-init-sql",
+    "copy-users-sql": "mkdir ./dist/db/sql/users && cp ./db/sql/users/*.sql ./dist/db/sql/users",
+    "copy-init-sql": "mkdir ./dist/db/sql/init && cp ./db/sql/init/*.sql ./dist/db/sql/init",
+    "build": "rm -rf ./dist && npx tsc && npm run build-sql",
+    "start": "npm run build && node dist/app.js | pino-pretty",
     "dev": "nodemon app.ts | pino-pretty"
   },
   "author": "Cedric Jastine Marcelino",

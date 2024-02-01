@@ -1,8 +1,9 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express } from 'express';
 import { requestLogger } from './utils/loggerFactory'
 import { setup, SwaggerOptions, serve } from 'swagger-ui-express'
 import swaggerJSDoc from 'swagger-jsdoc';
 import { PORT } from './utils/constants';
+import { db } from './db';
 const userRoutes = require('./routes/user.route');
 const authRoutes = require('./routes/auth.route');
 const cookieParser = require('cookie-parser');
@@ -14,6 +15,9 @@ const logger = require('pino')();
 // Fix error handling for bad json format - express.json()
 // Fix hard coded port and hosts
 // Transfer secret to environment when deploying
+// ADD DB CREDENTIALS TO ENV VARIABLES
+// Try to deploy nodejs app
+// Figure out how to deploy dockerized apps
 
 const options: SwaggerOptions = {
   definition: {
@@ -32,10 +36,14 @@ const options: SwaggerOptions = {
   apis: ["./routes/*.js"] // change to .ts when developing on local machine
 }
 
+const initiateTables = async () => {
+  await db.initTable.users();
+}
+
 const specs = swaggerJSDoc(options)
 
 const app: Express = express()
-
+initiateTables();
 app.use(express.json())
 app.use(cookieParser())
 app.use(requestLogger);
@@ -45,6 +53,6 @@ app.use('/explorer', serve, setup(specs));
 app.use('/users', userRoutes);
 app.use(authRoutes)
 
-app.listen(3000, () => {
+app.listen(PORT, () => {
   logger.info(`Server is listening on port ${PORT}`);
 });
