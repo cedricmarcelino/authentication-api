@@ -29,7 +29,7 @@ const options: SwaggerOptions = {
       }
     ],
   },
-  apis: ["./routes/*.ts"] // change to .js when going to deploy
+  apis: ["./routes/*.js"] // change to .ts when developing on local machine
 }
 
 const specs = swaggerJSDoc(options)
