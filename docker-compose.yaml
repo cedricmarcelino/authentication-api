@@ -16,7 +16,7 @@ services:
   server:
     image: cedricmarcelino/authentication-api
     ports:
-      - 4000:4000
+      - 3000:3000
     depends_on:
       postgres-db:
         condition: service_healthy
