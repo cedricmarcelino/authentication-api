@@ -103,7 +103,7 @@ const users_getByUsername = async (req: Request, res: Response) => {
         if (token) {
             logger.info('Token found.')
             logger.info('Verifying authenticity of token.')
-            const verify = jwt.verify(token, 'sampleSecret', { complete: true }) as CustomJwt
+            const verify = jwt.verify(token, sampleSecret, { complete: true }) as CustomJwt
             logger.info('Token verified.')
             logger.info(`Getting requested user's data.`)
             const getUser = await db.users.getUserByUsername(req.params.username)
