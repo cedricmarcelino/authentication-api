@@ -134,8 +134,8 @@ const users_getByUsername = async (req: Request, res: Response) => {
         }
     } catch (error: any) {
         if (error.name === 'JsonWebTokenError') {
-            logger.error(`${error.name}: invalid signature`)
-            const response = responseError(`${error.name}: invalid signature`)
+            logger.error(`${error.name}: ${error.message}`)
+            const response = responseError(`${error.name}: ${error.message}`)
             return res.status(400).send(response)
         }
         const response = responseServerError()
