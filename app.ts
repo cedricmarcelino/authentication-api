@@ -2,19 +2,18 @@ import express, { Express, Request, Response } from 'express';
 import { requestLogger } from './utils/loggerFactory'
 import { setup, SwaggerOptions, serve } from 'swagger-ui-express'
 import swaggerJSDoc from 'swagger-jsdoc';
+import { PORT } from './utils/constants';
 const userRoutes = require('./routes/user.route');
 const authRoutes = require('./routes/auth.route');
 const cookieParser = require('cookie-parser');
 const logger = require('pino')();
 
 // TO DO:
-// Add json format for responses, on error and on success
-// Double check responses, make sure to log it.
 // Configure Swagger UI
 // Add pagination for all users
-// Try to catch error of JWT verify
-// Fix error handling for bad json format
+// Fix error handling for bad json format - express.json()
 // Fix hard coded port and hosts
+// Transfer secret to environment when deploying
 
 const options: SwaggerOptions = {
   definition: {
@@ -26,7 +25,7 @@ const options: SwaggerOptions = {
     },
     servers: [
       {
-        url: "http://localhost:3000"
+        url: `http://localhost:${PORT}`
       }
     ],
   },
@@ -47,5 +46,5 @@ app.use('/users', userRoutes);
 app.use(authRoutes)
 
 app.listen(3000, () => {
-  logger.info(`Server is listening on port 3000`);
+  logger.info(`Server is listening on port ${PORT}`);
 });
