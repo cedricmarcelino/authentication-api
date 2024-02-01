@@ -1,9 +1,10 @@
 import { Request, Response } from 'express'
 import { userLoginSchema } from '../schema/users';
 import { db } from '../db';
-import { IUser } from '../db/models';
+import { IUser, IUserResponse } from '../db/models';
 import bcrypt from 'bcrypt'
 import { logger } from '../utils/loggerFactory'
+import { responseError, responseServerError, responseValidation } from '../utils/response';
 const userController = require('./user.controller')
 
 const login_user = async (req: Request, res: Response) => {
@@ -20,22 +21,34 @@ const login_user = async (req: Request, res: Response) => {
                 const token = userController.createToken(user[0].username);
                 res.cookie('jwt', token, { httpOnly: true, maxAge: userController.maxAge * 1000 })
                 logger.info('User authentication successful.')
-                return res.send('User authenticated!')
+                const response = {
+                    data: {
+                        username: user[0].username,
+                        email: user[0].email,
+                        first_name: user[0].first_name,
+                        last_name: user[0].last_name,
+                    }
+                }
+                return res.send(response)
             }
             logger.error('User authentication failed. Incorrect password.')
-            return res.send('Password incorrect!')
+            const response = responseError('Incorrect password.')
+            return res.status(401).send(response)
         } else {
-            logger.error('Username does not exist.')
-            return res.status(409).send('Username does not exist.')
+            logger.error('This username does not exist.')
+            const response = responseError('This username does not exist.')
+            return res.status(404).send(response)
         }
     } catch (error: any) {
         if(error.details) {
             logger.error('Request body invalid.')
             logger.error(error.details)
-            return res.status(400).send(error.details)
+            const response = responseValidation(error.details[0])
+            return res.status(400).send(response)
         } else {
             logger.error(error)
-            return res.status(500).send(error)
+            const response = responseServerError()
+            return res.status(500).send(response)
         }
     }
 }
