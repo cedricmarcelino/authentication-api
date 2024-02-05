@@ -112,7 +112,6 @@ const router = express.Router();
  *         properties:
  *          data:
  *           $ref: '#/components/schemas/UserNoPwSchema'
- *           description: Data of the registered user.
  *     400: 
  *      description: Bad Request
  *      content:
@@ -190,7 +189,6 @@ const router = express.Router();
  *         properties:
  *          data:
  *           $ref: '#/components/schemas/UserNoPwSchema'
- *           description: Data of the registered user.
  *     400: 
  *      description: Bad Request
  *      content:
