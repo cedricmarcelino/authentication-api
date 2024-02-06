@@ -1,5 +1,5 @@
 import {IDatabase, IMain} from 'pg-promise';
-import {IUser, IUserResponse} from '../models';
+import {IUser, IUserResponse, IUserCount} from '../models';
 import {users as sql} from '../sql';
 
 export class UsersRepository {
@@ -18,9 +18,12 @@ export class UsersRepository {
     constructor(private db: IDatabase<any>, private pgp: IMain) {
     }
 
-    // Returns all user records;
-    all(): Promise<IUser[]> {
-        return this.db.any(sql.all);
+    all(pageSize: number, pageNumber: number): Promise<IUser[]> {
+        return this.db.any(sql.all, [pageSize, pageNumber]);
+    }
+
+    count(): Promise<IUserCount> {
+        return this.db.one(sql.count);
     }
 
     add(username: string, password: string, email: string, first_name: string, last_name: string): Promise<IUserResponse> {

@@ -1,1 +1,1 @@
-SELECT * FROM members
+SELECT * FROM members ORDER BY first_name, id LIMIT $1 OFFSET ($2 - 1) *  $1

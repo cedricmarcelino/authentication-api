@@ -6,6 +6,7 @@ export const users = {
     add: sql('users/add.sql'),
     getUserByUsername: sql('users/getUserByUsername.sql'),
     getUserByEmail: sql('users/getUserByEmail.sql'),
+    count: sql('users/count.sql'),
 };
 
 export const init = {

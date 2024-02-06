@@ -29,12 +29,19 @@ const hashPassword = (password: string) => {
     return hashedPassword;
   }
 
-const users_index = (_req: Request, res: Response) => {
+const users_index = async (req: Request, res: Response) => {
     try {
+        const pageSize = req.query.pageSize as string|| '10'
+        const page = req.query.page as string || '1'
+        if(parseInt(page) < 1 || parseInt(pageSize) < 1 || Number.isNaN(parseInt(page)) || Number.isNaN(parseInt(pageSize))) {
+            const response = responseError('Invalid query parameters.')
+            return res.status(400).send(response)
+        }
+        const { count } = await db.users.count()
         logger.info('Retrieving all users.')
-        db.users.all().then((data) => {
+        db.users.all(parseInt(pageSize), parseInt(page)).then((data) => {
             logger.info('Retrieved all users.')
-            const response = {data}
+            const response = {data, page, pageSize, total: count}
             return res.send(response)
         })
     } catch (error) {

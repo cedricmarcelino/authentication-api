@@ -84,6 +84,19 @@ const router = express.Router();
  *   get:
  *    summary: Returns all of the users.
  *    tags: [Users]
+ *    parameters:
+ *      - in: query
+ *        name: page
+ *        required: false
+ *        schema:
+ *         type: string
+ *        description: Page number to query.
+ *      - in: query
+ *        name: pageSize
+ *        required: false
+ *        schema:
+ *         type: string
+ *        description: Page size for the query.
  *    responses:
  *     200:
  *      description: A list of all the registered users. The response will include the password of each user. This is just to showcase that hashing and salting is implemented on the passwords before storing it in the database.
@@ -97,6 +110,21 @@ const router = express.Router();
  *           items:
  *            $ref: '#/components/schemas/UserSchema'
  *           description: An array of all the registered users.
+ *          page:
+ *           type: string
+ *           description: The page requested.
+ *          pageSize:
+ *           type: string
+ *           description: The maximum number of users per page.
+ *          total:
+ *           type: string
+ *           description: Total number of users currently registered.
+ *     400: 
+ *      description: Bad Request
+ *      content:
+ *       application/json:
+ *        schema:
+ *         $ref: '#/components/schemas/GenericErrorSchema'
  *     500: 
  *      $ref: '#/components/responses/500'
  *   post:
