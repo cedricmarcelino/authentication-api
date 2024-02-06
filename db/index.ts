@@ -23,7 +23,10 @@ const pgp: IMain = pgPromise(initOptions);
 
 // Creating the database instance with extensions:
 const dbHost = process.env.DB_HOST || 'localhost'
-const db: ExtendedProtocol = pgp(`postgres://postgres:admin@${dbHost}:5432/blog_api`);
+const postgresUser = process.env.POSTGRES_USER
+const postgresDB = process.env.POSTGRES_DB
+const postgresPW = process.env.POSTGRES_PASSWORD
+const db: ExtendedProtocol = pgp(`postgres://${postgresUser}:${postgresPW}@${dbHost}:5432/${postgresDB}`);
 
 // Alternatively, you can get access to pgp via db.$config.pgp
 // See: https://vitaly-t.github.io/pg-promise/Database.html#$config
