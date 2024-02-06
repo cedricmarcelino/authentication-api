@@ -83,6 +83,7 @@ const router = express.Router();
  *  /users:
  *   get:
  *    summary: Returns all of the users.
+ *    description: Returns the information of all the registered users and the pagination information of the request. The response will include the password of each user. This is just to showcase that hashing and salting is implemented on the passwords before storing it in the database.
  *    tags: [Users]
  *    parameters:
  *      - in: query
@@ -99,7 +100,7 @@ const router = express.Router();
  *        description: Page size for the query.
  *    responses:
  *     200:
- *      description: A list of all the registered users. The response will include the password of each user. This is just to showcase that hashing and salting is implemented on the passwords before storing it in the database.
+ *      description: OK
  *      content:
  *       application/json:
  *        schema:
@@ -129,10 +130,11 @@ const router = express.Router();
  *      $ref: '#/components/responses/500'
  *   post:
  *    summary: Register a new user.
+ *    description: Returns the data of the registered user. The response will also provide a JWT in its Set-Cookie header for authentication purposes. This will be used for authentication when using the endpoint /users/{username}.
  *    tags: [Users]
  *    responses:
  *     200:
- *      description: Returns the data of the registered user. A JWT is returned in a cookie named JWT. This will be used for authentication when using the endpoint /users/{username}.
+ *      description: OK
  *      content:
  *       application/json:
  *        schema:
@@ -209,7 +211,7 @@ const router = express.Router();
  *        description: The user's username
  *    responses:
  *     200:
- *      description: Returns the data of the user requested.
+ *      description: OK
  *      content:
  *       application/json:
  *        schema:

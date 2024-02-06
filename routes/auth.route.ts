@@ -16,6 +16,7 @@ const router = express.Router();
  *   post:
  *    summary: Login as a specific user.
  *    tags: [Authentication]
+ *    description: Returns the user's information upon logging in. The response will also provide a JWT in its Set-Cookie header for authentication purposes.
  *    requestBody:
  *     required: true
  *     content:
@@ -37,7 +38,7 @@ const router = express.Router();
  *         password: SecuredPassword0711!
  *    responses:
  *     200:
- *      description: Returns the user's information upon logging in. 
+ *      description: OK 
  *      content:
  *       application/json:
  *        schema:
@@ -73,9 +74,10 @@ const router = express.Router();
  *   post:
  *    summary: Logout the currently logged in user.
  *    tags: [Authentication]
+ *    description: Returns a message once the user is successfuly logged out. This will clear the current JWT Cookie if there is one.
  *    responses:
  *     200:
- *      description: Returns a success message upon logging out.
+ *      description: OK
  *      content:
  *       application/json:
  *        schema:
