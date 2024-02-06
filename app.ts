@@ -1,9 +1,10 @@
-import express, { Express } from 'express';
+import express, { Express, Request, Response, NextFunction } from 'express';
 import { requestLogger } from './utils/loggerFactory'
 import { setup, SwaggerOptions, serve } from 'swagger-ui-express'
 import swaggerJSDoc from 'swagger-jsdoc';
 import { PORT } from './utils/constants';
 import { db } from './db';
+import { responseError } from './utils/response';
 const userRoutes = require('./routes/user.route');
 const authRoutes = require('./routes/auth.route');
 const cookieParser = require('cookie-parser');
@@ -18,6 +19,10 @@ const logger = require('pino')();
 // ADD DB CREDENTIALS TO ENV VARIABLES
 // Try to deploy nodejs app
 // Figure out how to deploy dockerized apps
+
+interface ISyntaxError extends SyntaxError {
+  status: number
+}
 
 const options: SwaggerOptions = {
   definition: {
@@ -45,6 +50,16 @@ const specs = swaggerJSDoc(options)
 const app: Express = express()
 initiateTables();
 app.use(express.json())
+
+app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
+  if (err instanceof SyntaxError && (err as ISyntaxError).status === 400 && 'body' in err) {
+    const response = responseError(err.message)
+    logger.error(`Invalid JSON format.`);
+    return res.status(400).send(response);
+  }
+  next();
+});
+
 app.use(cookieParser())
 app.use(requestLogger);
 
