@@ -4,7 +4,7 @@ import { db } from '../db';
 import { IUser } from '../db/models';
 import bcrypt from 'bcrypt'
 import { logger } from '../utils/loggerFactory'
-import { responseError, responseServerError, responseValidation } from '../utils/response';
+import { responseError } from '../utils/response';
 const userController = require('./user.controller')
 
 const login_user = async (req: Request, res: Response) => {
@@ -32,22 +32,22 @@ const login_user = async (req: Request, res: Response) => {
                 return res.send(response)
             }
             logger.error('User authentication failed. Incorrect password.')
-            const response = responseError('Incorrect password.')
+            const response = responseError('Incorrect password.', 'password')
             return res.status(401).send(response)
         } else {
             logger.error('This username does not exist.')
-            const response = responseError('This username does not exist.')
+            const response = responseError('This username does not exist.', 'username')
             return res.status(404).send(response)
         }
     } catch (error: any) {
         if(error.details) {
             logger.error('Request body invalid.')
             logger.error(error.details)
-            const response = responseValidation(error.details[0])
+            const response = responseError(error.details[0].message, error.details[0].context?.key)
             return res.status(400).send(response)
         } else {
             logger.error(error)
-            const response = responseServerError()
+            const response = responseError('Internal Server Error')
             return res.status(500).send(response)
         }
     }
@@ -63,7 +63,7 @@ const logout_user = async (req: Request, res: Response) => {
         res.send(data)
     } catch (error: any) {
         logger.error(error)
-        const response = responseServerError()
+        const response = responseError('Internal Server Error')
         return res.status(500).send(response)
     }
 }

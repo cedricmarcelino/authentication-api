@@ -30,8 +30,6 @@ const router = express.Router();
  *    ErrorWithPropSchema:
  *     type: object
  *     properties:
- *      description:
- *       type: string
  *      error:
  *       type: object
  *       properties:
@@ -73,9 +71,11 @@ const router = express.Router();
  *       schema:
  *        type: object
  *        properties:
- *         description:
- *          type: string
- *          description: A description of the error.
+ *         error:
+ *          type: object
+ *          properties: 
+ *           message:
+ *            type: string
  */
 
 /**

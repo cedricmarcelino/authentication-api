@@ -56,13 +56,13 @@ const router = express.Router();
  *      content:
  *       application/json:
  *        schema:
- *         $ref: '#/components/schemas/GenericErrorSchema'
+ *         $ref: '#/components/schemas/ErrorWithPropSchema'
  *     404: 
  *      description: Not Found
  *      content:
  *       application/json:
  *        schema:
- *         $ref: '#/components/schemas/GenericErrorSchema'
+ *         $ref: '#/components/schemas/ErrorWithPropSchema'
  *     500: 
  *      $ref: '#/components/responses/500'
  */

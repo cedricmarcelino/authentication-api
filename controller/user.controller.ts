@@ -5,7 +5,7 @@ import { IUser } from '../db/models'
 import jwt, { Jwt, JwtPayload } from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 import { logger } from '../utils/loggerFactory'
-import { responseConflict, responseError, responseServerError, responseValidation } from '../utils/response'
+import { responseError } from '../utils/response'
 
 interface CustomJWTPayload extends JwtPayload {
     username: string;
@@ -39,7 +39,7 @@ const users_index = (_req: Request, res: Response) => {
         })
     } catch (error) {
         logger.error(error)
-        const response = responseServerError()
+        const response = responseError('Internal Server Error')
         return res.status(500).send(response)
     }
 }
@@ -55,7 +55,7 @@ const users_add = async (req: Request, res: Response) => {
         const isUsernameTaken = await db.users.getUserByUsername(username)
         if (isUsernameTaken.length > 0) {
             logger.error('Username is already taken.')
-            const response = responseConflict('username', 'Username is already taken.')
+            const response = responseError('Username is already taken.', 'username')
             return res.status(409).send(response)
         }
         logger.info('Username is not taken.')
@@ -63,7 +63,7 @@ const users_add = async (req: Request, res: Response) => {
         const isEmailTaken = await db.users.getUserByEmail(email)
         if (isEmailTaken.length > 0) {
             logger.error('Email is already linked to an account.')
-            const response = responseConflict('email', 'Email is already linked to an account.')
+            const response = responseError('Email is already linked to an account.', 'email')
             return res.status(409).send(response)
         }
         logger.info('Email is not taken.')
@@ -86,11 +86,11 @@ const users_add = async (req: Request, res: Response) => {
         if(error.details) {
             logger.error('Request body invalid.')
             logger.error(error.details)
-            const response = responseValidation(error.details[0])
+            const response = responseError(error.details[0].message, error.details[0].context?.key)
             return res.status(400).send(response)
         } else {
             logger.error(error)
-            const response = responseServerError()
+            const response = responseError('Internal Server Error')
             return res.status(500).send(response)
         }
     }
@@ -138,7 +138,7 @@ const users_getByUsername = async (req: Request, res: Response) => {
             const response = responseError(`${error.name}: ${error.message}`)
             return res.status(400).send(response)
         }
-        const response = responseServerError()
+        const response = responseError('Internal Server Error')
         logger.error(error)
         return res.status(500).send(response)
     }
