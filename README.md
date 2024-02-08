@@ -1,6 +1,6 @@
 ## Introduction
 
-This is an authentication REST API and this is the first REST API I've made with NodeJS/Express. 
+This is an authentication REST API and this is the first REST API I've made with NodeJS/Express deployed as a docker image in AWS EC2.
 
 ## Functionalities
 
@@ -11,7 +11,7 @@ This is an authentication REST API and this is the first REST API I've made with
 5. The GET /users API Endpoint exposes all of the users, regardless of authentication, this is just to show how the data for each user is being stored within the database. This is to showcase as well that the passwords are being hashed and salted before reaching the database.
 6. Validation of request body.
 7. Storing of data into a PostgreSQL Database
-8. Swagger UI -- coming soon --
+8. Swagger UI for documentation and trial purposes.
 
 ## Techs use
 
@@ -22,8 +22,14 @@ This is an authentication REST API and this is the first REST API I've made with
 5. Cookie Parser
 6. Joi
 7. PG Promise
+8. AWS ECR for hosting application's image
+9. AWS EC2 for deployment
+10. Swagger
+11. Express JS
+12. PG Promise
+13. Pino HTTP
 
 ## Deployment
 
--- Under construction --
-You can access the deployed version here: 
+You can access the deployed Swagger UI here:
+http://44.223.69.226:4000/explorer/
