@@ -26,8 +26,7 @@ This is an authentication REST API and this is the first REST API I've made with
 9. AWS EC2 for deployment
 10. Swagger
 11. Express JS
-12. PG Promise
-13. Pino HTTP
+12. Pino HTTP
 
 ## Deployment
 
