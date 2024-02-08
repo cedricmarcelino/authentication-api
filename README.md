@@ -27,6 +27,7 @@ This is an authentication REST API and this is the first REST API I've made with
 10. Swagger
 11. Express JS
 12. Pino HTTP
+13. Docker
 
 ## Deployment
 
