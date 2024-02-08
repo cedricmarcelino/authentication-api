@@ -14,7 +14,7 @@ services:
       timeout: 10s
       retries: 10
   server:
-    image: cedricmarcelino/authentication-api
+    image: public.ecr.aws/y3j2b8p3/api/authentication-nodejs:1.2
     ports:
       - 4000:4000
     depends_on:
