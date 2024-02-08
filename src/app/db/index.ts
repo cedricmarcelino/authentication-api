@@ -1,6 +1,7 @@
 import pgPromise from 'pg-promise'; // pg-promise core library
 import { IInitOptions, IDatabase, IMain } from 'pg-promise';
 import { IExtensions, InitTable, UsersRepository } from './repos';
+// require('dotenv').config(); // only for dev purposes
 
 type ExtendedProtocol = IDatabase<IExtensions> & IExtensions;
 

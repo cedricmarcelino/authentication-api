@@ -11,14 +11,10 @@ const cookieParser = require('cookie-parser');
 const logger = require('pino')();
 
 // TO DO:
-// Configure Swagger UI
-// Add pagination for all users
-// Fix error handling for bad json format - express.json()
+// Try to deploy dockerized application with DB
 // Fix hard coded port and hosts
-// Transfer secret to environment when deploying
-// ADD DB CREDENTIALS TO ENV VARIABLES
-// Try to deploy nodejs app
-// Figure out how to deploy dockerized apps
+// Transfer initiating of table into docker compose?
+// Store JWT Secret better?
 
 interface ISyntaxError extends SyntaxError {
   status: number
