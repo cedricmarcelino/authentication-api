@@ -10,12 +10,6 @@ const authRoutes = require('./routes/auth.route');
 const cookieParser = require('cookie-parser');
 const logger = require('pino')();
 
-// TO DO:
-// Try to deploy dockerized application with DB
-// Fix hard coded port and hosts
-// Transfer initiating of table into docker compose?
-// Store JWT Secret better?
-
 interface ISyntaxError extends SyntaxError {
   status: number
 }
@@ -29,6 +23,9 @@ const options: SwaggerOptions = {
       description: `This is an authentication REST API and this is the first REST API I've made with NodeJS/Express.`
     },
     servers: [
+      {
+        url: `http://44.223.69.226:${PORT}`
+      },
       {
         url: `http://localhost:${PORT}`
       }
