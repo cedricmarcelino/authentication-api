@@ -16,9 +16,13 @@ services:
   server:
     image: cedricmarcelino/authentication-api
     ports:
-      - 3000:3000
+      - 4000:4000
     depends_on:
       postgres-db:
         condition: service_healthy
     environment:
       DB_HOST: postgres-db
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: postgres
+      POSTGRES_DB: blog_api
+      PORT: 4000
