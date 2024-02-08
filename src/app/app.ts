@@ -34,7 +34,7 @@ const options: SwaggerOptions = {
       }
     ],
   },
-  apis: ["./routes/*.js"] // change to .ts when developing on local machine
+  apis: ["./routes/*.ts"]
 }
 
 const initiateTables = async () => {
