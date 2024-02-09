@@ -32,4 +32,4 @@ This is an authentication REST API and this is the first REST API I've made with
 ## Deployment
 
 You can access the deployed Swagger UI here:
-http://44.223.69.226:4000/explorer/
+http://ec2-44-223-69-226.compute-1.amazonaws.com/explorer/
